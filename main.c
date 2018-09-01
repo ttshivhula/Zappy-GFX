@@ -137,7 +137,7 @@ int	create_textures(t_graphics **ptr)
 	int error;
 
 	error = 0;
-	((*ptr)->grass).surface = IMG_Load("media/cartoonGrass.png");
+	((*ptr)->grass).surface = IMG_Load("media/grass.png");
 	((*ptr)->wall).surface = IMG_Load("media/cartoonWall.png");
 	((*ptr)->water).surface = IMG_Load("media/ground.jpg");
 	if (!((*ptr)->grass).surface || !((*ptr)->wall).surface ||
@@ -283,10 +283,10 @@ void	threads(int fd, t_graphics **graphics)
 	mn.fd = fd;
 	mn.master = master;
 	pthread_attr_init(&attr);
-	if (!pthread_create(&thread, &attr, render, &mn))
-		printf("success 1\n");
-	if(!pthread_create(&thread2, &attr, select_loop, (void *)&mn))
-		printf("success 2\n");
+	if (pthread_create(&thread, &attr, render, &mn))
+		printf("unable to create thread\n");
+	if(pthread_create(&thread2, &attr, select_loop, (void *)&mn))
+		printf("unable to create thread\n");
 	pthread_join(thread, NULL);
 	pthread_join(thread2, NULL);
 }
