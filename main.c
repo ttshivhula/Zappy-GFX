@@ -1,59 +1,16 @@
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <sys/param.h>
-# include <stdint.h>
-# include <sys/wait.h>
-# include <sys/mman.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <errno.h>
-# include <sys/socket.h>
-# include <sys/select.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <netdb.h>
-# include <dirent.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <pthread.h>
-#include "gfx_entity.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/09/03 15:50:59 by ttshivhu          #+#    #+#             */
+/*   Updated: 2018/09/03 15:57:06 by ttshivhu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_timer.h>
-#include <SDL2/SDL_image.h>
-
-#define h_addr h_addr_list[0]
-
-#define WINDOW_WIDTH 1280 - (64 * 4) //1280 //(1088 + 192) //15 blocks for game, 2 for boders
-#define WINDOW_REAL_WIDTH 1280 + 64
-#define WINDOW_HEIGHT (704) // 9 for game
-
-typedef struct		s_sprite
-{
-	SDL_Surface*	surface;
-	SDL_Texture	*texture;
-	SDL_Rect	rect;
-}			t_sprite;
-
-typedef struct		s_graphics
-{
-	SDL_Window	*window;
-	SDL_Renderer	*renderer;
-	int		x;
-	int		y;
-	t_sprite	wall;
-	t_sprite	grass;
-	t_sprite	water;
-}			t_graphics;
-
-typedef	struct		s_main
-{
-	t_graphics	gui;
-	fd_set		master;
-	int		fd;
-}			t_main;
+#include <gfx.h>
 
 void	draw_boaders(t_graphics *gui)
 {
@@ -84,6 +41,14 @@ void	draw_boaders(t_graphics *gui)
 					SDL_RenderCopy(gui->renderer,
 						       (gui->grass).texture,
 						       NULL, &((gui->wall).rect));
+					draw_food(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_thystame(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_phiras(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_mendiane(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_sibur(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_deraumere(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_linemate(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					draw_egg(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
 				}
 				else
 				{
@@ -93,11 +58,9 @@ void	draw_boaders(t_graphics *gui)
 				}
 			}
 			((gui->wall).rect).x += ((gui->wall).rect).w;
-			//((gui->wall).rect).x += ((gui->wall).rect).w;
 			x++;
 		}
 		((gui->wall).rect).y += ((gui->wall).rect).h;
-	//	((gui->wall).rect).y += ((gui->wall).rect).h;
 		y++;
 	}
 }
@@ -119,6 +82,17 @@ void	draw_menu(t_graphics *gui)
 		}
 		((gui->water).rect).y += ((gui->water).rect).h;
 	}
+	SDL_RenderCopy(gui->renderer, (gui->tmain).texture, NULL, &((gui->tmain).rect));
+}
+
+void	create_text_textures(t_graphics **ptr)
+{
+	SDL_Color color = {0, 0, 0, 0};
+	((*ptr)->tmain).surface = TTF_RenderText_Solid((*ptr)->mfont, "ZAPPY", color);
+	((*ptr)->tmain).texture = SDL_CreateTextureFromSurface((*ptr)->renderer, ((*ptr)->tmain).surface);
+    SDL_QueryTexture(((*ptr)->tmain).texture, NULL, NULL, &(((*ptr)->tmain).rect).w, &(((*ptr)->tmain).rect).h);
+	(((*ptr)->tmain).rect).x = 1024 + 32;
+	(((*ptr)->tmain).rect).y = 0;
 }
 
 int	texture_info(t_graphics **ptr)
@@ -130,6 +104,54 @@ int	texture_info(t_graphics **ptr)
     SDL_QueryTexture(((*ptr)->water).texture, NULL, NULL,
 		     &(((*ptr)->water).rect).w, &(((*ptr)->water).rect).h);
     return (1);
+}
+
+int	entity_textures(t_graphics **ptr)
+{
+	((*ptr)->linemate).surface = IMG_Load("media/linemate.png");
+	((*ptr)->deraumere).surface = IMG_Load("media/deraumere.png");
+	((*ptr)->sibur).surface = IMG_Load("media/sibur.png");
+	((*ptr)->mendiane).surface = IMG_Load("media/mendiane.png");
+	((*ptr)->phiras).surface = IMG_Load("media/phiras.png");
+	((*ptr)->thystame).surface = IMG_Load("media/thystame.png");
+	((*ptr)->food).surface = IMG_Load("media/food.png");
+	((*ptr)->egg).surface = IMG_Load("media/egg.png");
+
+
+	((*ptr)->linemate).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->linemate).surface);
+	((*ptr)->deraumere).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->deraumere).surface);
+	((*ptr)->sibur).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->sibur).surface);
+	((*ptr)->mendiane).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->mendiane).surface);
+	((*ptr)->phiras).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->phiras).surface);
+	((*ptr)->thystame).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->thystame).surface);
+	((*ptr)->food).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->food).surface);
+	((*ptr)->egg).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->egg).surface);
+
+	SDL_QueryTexture(((*ptr)->linemate).texture, NULL, NULL,
+		     &(((*ptr)->linemate).rect).w, &(((*ptr)->linemate).rect).h);
+	SDL_QueryTexture(((*ptr)->deraumere).texture, NULL, NULL,
+		     &(((*ptr)->deraumere).rect).w, &(((*ptr)->deraumere).rect).h);
+	SDL_QueryTexture(((*ptr)->sibur).texture, NULL, NULL,
+		     &(((*ptr)->sibur).rect).w, &(((*ptr)->sibur).rect).h);
+	SDL_QueryTexture(((*ptr)->mendiane).texture, NULL, NULL,
+		     &(((*ptr)->mendiane).rect).w, &(((*ptr)->mendiane).rect).h);
+	SDL_QueryTexture(((*ptr)->phiras).texture, NULL, NULL,
+		     &(((*ptr)->phiras).rect).w, &(((*ptr)->phiras).rect).h);
+	SDL_QueryTexture(((*ptr)->thystame).texture, NULL, NULL,
+		     &(((*ptr)->thystame).rect).w, &(((*ptr)->thystame).rect).h);
+	SDL_QueryTexture(((*ptr)->food).texture, NULL, NULL,
+		     &(((*ptr)->food).rect).w, &(((*ptr)->food).rect).h);
+	SDL_QueryTexture(((*ptr)->egg).texture, NULL, NULL,
+		     &(((*ptr)->egg).rect).w, &(((*ptr)->egg).rect).h);
+	return (1);
 }
 
 int	create_textures(t_graphics **ptr)
@@ -152,6 +174,8 @@ int	create_textures(t_graphics **ptr)
 	SDL_FreeSurface(((*ptr)->grass).surface);
 	SDL_FreeSurface(((*ptr)->wall).surface);
 	SDL_FreeSurface(((*ptr)->water).surface);
+	create_text_textures(ptr);
+	entity_textures(ptr);
 	if (!((*ptr)->wall).texture  || !((*ptr)->grass).texture ||
 	    !((*ptr)->grass).texture || error)
 	{
@@ -175,6 +199,9 @@ int	init_graphics(t_graphics **ptr)
 	(*ptr)->y = 0;
 	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
 		error = 1;
+	if(TTF_Init())
+		error = 1;
+	(*ptr)->mfont = TTF_OpenFont("media/font.ttf", 80);
 	(*ptr)->window = SDL_CreateWindow("WTC - Zappy",
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
@@ -211,13 +238,12 @@ void	*render(void *ptr)
 		SDL_RenderClear((mn->gui).renderer);
 		if (bottons & SDL_BUTTON(SDL_BUTTON_LEFT))
 		{
-			//printf("mouse x: %d y: %d\n", x, y);
 			(mn->gui).y++;
 			(mn->gui).x++;
+			printf("mouse x: %d y: %d\n", x, y);
 		}
 		if (bottons & SDL_BUTTON(SDL_BUTTON_RIGHT))
 		{
-			//printf("mouse x: %d y: %d\n", x, y);
 			(mn->gui).y--;
 			(mn->gui).x--;
 		}
@@ -275,20 +301,15 @@ void	threads(int fd, t_graphics **graphics)
 	t_main				mn;
 	fd_set				master;
 	pthread_t			thread;
-	pthread_t			thread2;
-	pthread_attr_t			attr;
 	
 	set_fds_conn(&master, fd);
 	mn.gui = *(*graphics);
 	mn.fd = fd;
 	mn.master = master;
-	pthread_attr_init(&attr);
-	if (pthread_create(&thread, &attr, render, &mn))
+	if(pthread_create(&thread, NULL, select_loop, (void *)&mn))
 		printf("unable to create thread\n");
-	if(pthread_create(&thread2, &attr, select_loop, (void *)&mn))
-		printf("unable to create thread\n");
+	render(&mn);
 	pthread_join(thread, NULL);
-	pthread_join(thread2, NULL);
 }
 
 int	main(int c, char **v)

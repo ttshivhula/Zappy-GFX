@@ -26,13 +26,14 @@
 ** Basic gfx entity for most food and stones
 **
 ** == Object types ==
-** - "linemate"
-** - "deraumere"
-** - "sibur"
-** - "mendiane"
-** - "phiras"
-** - "thystame"
-** - "food"
+** - "linemate" -
+** - "deraumere" - 
+** - "sibur" -
+** - "mendiane" -
+** - "phiras" -
+** - "thystame" -
+** - "food" -
+** - "egg" -
 **
 */
 
