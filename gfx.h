@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:49:17 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/03 18:34:17 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/03 18:38:39 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@
 	#include <SDL2/SDL_ttf.h>
 #endif
 
-#define h_addr h_addr_list[0]
 #define WINDOW_WIDTH 1280 - (64 * 4) //1280 //(1088 + 192) //15 blocks for game, 2 for boders
 #define WINDOW_REAL_WIDTH 1280 + 64
 #define WINDOW_HEIGHT (704) // 9 for game
