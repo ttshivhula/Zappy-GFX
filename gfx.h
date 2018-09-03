@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:49:17 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/03 17:09:17 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/03 18:34:17 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@
 	#include <SDL_image.h>
 	#include <SDL_ttf.h>
 #else
-	#include <SDL/SDL_timer.h>
-	#include <SDL/SDL_image.h>
-	#include <SDL/SDL_ttf.h>
+	#include <SDL2/SDL_timer.h>
+	#include <SDL2/SDL_image.h>
+	#include <SDL2/SDL_ttf.h>
 #endif
 
 #define h_addr h_addr_list[0]
