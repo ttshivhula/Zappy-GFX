@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:50:59 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/03 15:57:06 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/04 11:32:52 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	draw_boaders(t_graphics *gui)
 					draw_deraumere(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
 					draw_linemate(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
 					draw_egg(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					if (x == 3 && y == 3)
+						draw_player(gui, ((gui->wall).rect).x, ((gui->wall).rect).y, 270);
 				}
 				else
 				{
@@ -104,6 +106,31 @@ int	texture_info(t_graphics **ptr)
     SDL_QueryTexture(((*ptr)->water).texture, NULL, NULL,
 		     &(((*ptr)->water).rect).w, &(((*ptr)->water).rect).h);
     return (1);
+}
+
+int	monkey(t_graphics **ptr)
+{
+	((*ptr)->front).surface = IMG_Load("media/front.png");
+	((*ptr)->left).surface = IMG_Load("media/left.png");
+	((*ptr)->right).surface = IMG_Load("media/right.png");
+	((*ptr)->back).surface = IMG_Load("media/back.png");
+	((*ptr)->front).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->front).surface);
+	((*ptr)->right).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->right).surface);
+	((*ptr)->left).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->left).surface);
+	((*ptr)->back).texture = SDL_CreateTextureFromSurface(
+			(*ptr)->renderer, ((*ptr)->back).surface);
+	SDL_QueryTexture(((*ptr)->front).texture, NULL, NULL,
+		     &(((*ptr)->front).rect).w, &(((*ptr)->front).rect).h);
+	SDL_QueryTexture(((*ptr)->left).texture, NULL, NULL,
+		     &(((*ptr)->left).rect).w, &(((*ptr)->left).rect).h);
+	SDL_QueryTexture(((*ptr)->right).texture, NULL, NULL,
+		     &(((*ptr)->right).rect).w, &(((*ptr)->right).rect).h);
+	SDL_QueryTexture(((*ptr)->back).texture, NULL, NULL,
+		     &(((*ptr)->back).rect).w, &(((*ptr)->back).rect).h);
+	return (1);
 }
 
 int	entity_textures(t_graphics **ptr)
@@ -176,6 +203,7 @@ int	create_textures(t_graphics **ptr)
 	SDL_FreeSurface(((*ptr)->water).surface);
 	create_text_textures(ptr);
 	entity_textures(ptr);
+	monkey(ptr);
 	if (!((*ptr)->wall).texture  || !((*ptr)->grass).texture ||
 	    !((*ptr)->grass).texture || error)
 	{
@@ -240,6 +268,8 @@ void	*render(void *ptr)
 		{
 			(mn->gui).y++;
 			(mn->gui).x++;
+			x = ft_map(x);
+			y = ft_map(y);
 			printf("mouse x: %d y: %d\n", x, y);
 		}
 		if (bottons & SDL_BUTTON(SDL_BUTTON_RIGHT))
@@ -253,6 +283,30 @@ void	*render(void *ptr)
 		SDL_Delay(1000/100);
 	}
 	return ptr;
+}
+
+void	communication(void *ptr)
+{
+	t_main	*mn;
+	static	first  = 0;
+	char	buff[BUFF_SIZE];
+	char	*tmp;
+
+	bzero(buff, sizeof(buff));
+	mn = (t_main *)ptr;
+	if (first < 2)
+	{
+		read(mn->fd, buff, sizeof(buff));
+		if (fisrt)
+		{
+			tmp = strchr(buff, ' ') + 1;
+			(mn->gui).x = atoi(buff);
+			(mn->gui).y = atoi(tmp);
+		}
+		else
+			send(mn->fd, "GRAPHIC\n", 8, 0);
+		first++;
+	}
 }
 
 void	*select_loop(void *ptr)

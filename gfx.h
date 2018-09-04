@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:49:17 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/03 18:38:39 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/04 11:27:05 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@
 	#include <SDL2/SDL_ttf.h>
 #endif
 
+#define BUFF_SIZE 4096
 #define WINDOW_WIDTH 1280 - (64 * 4) //1280 //(1088 + 192) //15 blocks for game, 2 for boders
 #define WINDOW_REAL_WIDTH 1280 + 64
 #define WINDOW_HEIGHT (704) // 9 for game
@@ -80,7 +81,12 @@ typedef struct		s_graphics
 	t_sprite	phiras;
 	t_sprite	thystame;
 	t_sprite	food;
+	t_sprite	broadcast;
 	t_sprite	egg;
+	t_sprite	front;
+	t_sprite	left;
+	t_sprite	right;
+	t_sprite	back;
 	t_text		tmain;
 }			t_graphics;
 
@@ -99,5 +105,7 @@ void	draw_mendiane(t_graphics *gui, int x, int y);
 void	draw_sibur(t_graphics *gui, int x, int y);
 void	draw_deraumere(t_graphics *gui, int x, int y);
 void	draw_linemate(t_graphics *gui, int x, int y);
+int		ft_map(int val);
+void	draw_player(t_graphics *gui, int x, int y, int orient);
 
 #endif
