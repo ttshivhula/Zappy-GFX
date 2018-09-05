@@ -6,13 +6,14 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:49:17 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/04 11:27:05 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/05 11:02:19 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef	GFX_H
 # define GFX_H
 
+# include <libft.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
@@ -90,12 +91,22 @@ typedef struct		s_graphics
 	t_text		tmain;
 }			t_graphics;
 
+typedef	struct		s_ent
+{
+	char			name[4096];
+	int				x;
+	int				y;
+	int				amount;
+	struct s_ent	*next;
+}					t_ent;
+
 typedef	struct		s_main
 {
-	t_graphics	gui;
-	fd_set		master;
-	int		fd;
-}			t_main;
+	t_graphics		gui;
+	fd_set			master;
+	int				fd;
+	t_ent			*ent;
+}					t_main;
 
 void	draw_food(t_graphics *gui, int x, int y);
 void	draw_egg(t_graphics *gui, int x, int y);
@@ -107,5 +118,6 @@ void	draw_deraumere(t_graphics *gui, int x, int y);
 void	draw_linemate(t_graphics *gui, int x, int y);
 int		ft_map(int val);
 void	draw_player(t_graphics *gui, int x, int y, int orient);
+void	add_items(t_ent **ent, char **ptr);
 
 #endif

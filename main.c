@@ -6,13 +6,43 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:50:59 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/04 19:27:42 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/05 12:03:22 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <gfx.h>
 
-void	draw_boaders(t_graphics *gui)
+void	display(t_main *mn, t_graphics *gui, int x, int y)
+{
+	t_ent *tmp;
+
+	tmp = mn->ent;
+	while (tmp)
+	{
+		if (tmp->amount)
+		{
+			if (!ft_strcmp("food", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_food(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("thystame", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_thystame(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("phiras", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_phiras(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("mendiane", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_mendiane(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("sibur", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_sibur(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("deraumere", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_deraumere(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("linemate", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_linemate(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+			if (!ft_strcmp("egg", tmp->name) && (tmp->x == x && tmp->y == y))
+				draw_egg(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	draw_boaders(t_graphics *gui, t_main *mn)
 {
 	int x;
 	int y;
@@ -28,35 +58,36 @@ void	draw_boaders(t_graphics *gui)
 		while (((gui->wall).rect).x < WINDOW_WIDTH)
 		{
 			if ((!((gui->wall).rect).y || ((gui->wall).rect).y == WINDOW_HEIGHT - ((gui->wall).rect).h) ||
-			    (!((gui->wall).rect).x || ((gui->wall).rect).x == WINDOW_WIDTH - ((gui->wall).rect).w))
+					(!((gui->wall).rect).x || ((gui->wall).rect).x == WINDOW_WIDTH - ((gui->wall).rect).w))
 			{
 				SDL_RenderCopy(gui->renderer,
-					       (gui->wall).texture, NULL,
-					       &((gui->wall).rect));
+						(gui->wall).texture, NULL,
+						&((gui->wall).rect));
 			}
 			else
 			{
 				if (x < gui->x && y < gui->y)
 				{
 					SDL_RenderCopy(gui->renderer,
-						       (gui->grass).texture,
-						       NULL, &((gui->wall).rect));
-					draw_food(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_thystame(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_phiras(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_mendiane(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_sibur(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_deraumere(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_linemate(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					draw_egg(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+							(gui->grass).texture,
+							NULL, &((gui->wall).rect));
+					/*draw_food(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_thystame(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_phiras(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_mendiane(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_sibur(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_deraumere(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_linemate(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
+					  draw_egg(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);*/
+					display(mn, gui, x, y);
 					if (x == 3 && y == 3)
 						draw_player(gui, ((gui->wall).rect).x, ((gui->wall).rect).y, 270);
 				}
 				else
 				{
 					SDL_RenderCopy(gui->renderer,
-						       (gui->wall).texture,
-						       NULL, &((gui->wall).rect));
+							(gui->wall).texture,
+							NULL, &((gui->wall).rect));
 				}
 			}
 			((gui->wall).rect).x += ((gui->wall).rect).w;
@@ -78,8 +109,8 @@ void	draw_menu(t_graphics *gui)
 		while (((gui->water).rect).x < WINDOW_REAL_WIDTH)
 		{
 			SDL_RenderCopy(gui->renderer,
-				       (gui->water).texture,
-				       NULL, &((gui->water).rect));
+					(gui->water).texture,
+					NULL, &((gui->water).rect));
 			((gui->water).rect).x += ((gui->water).rect).w;
 		}
 		((gui->water).rect).y += ((gui->water).rect).h;
@@ -92,20 +123,20 @@ void	create_text_textures(t_graphics **ptr)
 	SDL_Color color = {0, 0, 0, 0};
 	((*ptr)->tmain).surface = TTF_RenderText_Solid((*ptr)->mfont, "ZAPPY", color);
 	((*ptr)->tmain).texture = SDL_CreateTextureFromSurface((*ptr)->renderer, ((*ptr)->tmain).surface);
-    SDL_QueryTexture(((*ptr)->tmain).texture, NULL, NULL, &(((*ptr)->tmain).rect).w, &(((*ptr)->tmain).rect).h);
+	SDL_QueryTexture(((*ptr)->tmain).texture, NULL, NULL, &(((*ptr)->tmain).rect).w, &(((*ptr)->tmain).rect).h);
 	(((*ptr)->tmain).rect).x = 1024 + 32;
 	(((*ptr)->tmain).rect).y = 0;
 }
 
 int	texture_info(t_graphics **ptr)
 {
-    SDL_QueryTexture(((*ptr)->grass).texture, NULL, NULL,
-		     &(((*ptr)->grass).rect).w, &(((*ptr)->grass).rect).h);
-    SDL_QueryTexture(((*ptr)->wall).texture, NULL, NULL,
-		     &(((*ptr)->wall).rect).w, &(((*ptr)->wall).rect).h);
-    SDL_QueryTexture(((*ptr)->water).texture, NULL, NULL,
-		     &(((*ptr)->water).rect).w, &(((*ptr)->water).rect).h);
-    return (1);
+	SDL_QueryTexture(((*ptr)->grass).texture, NULL, NULL,
+			&(((*ptr)->grass).rect).w, &(((*ptr)->grass).rect).h);
+	SDL_QueryTexture(((*ptr)->wall).texture, NULL, NULL,
+			&(((*ptr)->wall).rect).w, &(((*ptr)->wall).rect).h);
+	SDL_QueryTexture(((*ptr)->water).texture, NULL, NULL,
+			&(((*ptr)->water).rect).w, &(((*ptr)->water).rect).h);
+	return (1);
 }
 
 int	monkey(t_graphics **ptr)
@@ -115,21 +146,21 @@ int	monkey(t_graphics **ptr)
 	((*ptr)->right).surface = IMG_Load("media/right.png");
 	((*ptr)->back).surface = IMG_Load("media/back.png");
 	((*ptr)->front).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->front).surface);
+		(*ptr)->renderer, ((*ptr)->front).surface);
 	((*ptr)->right).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->right).surface);
+		(*ptr)->renderer, ((*ptr)->right).surface);
 	((*ptr)->left).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->left).surface);
+		(*ptr)->renderer, ((*ptr)->left).surface);
 	((*ptr)->back).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->back).surface);
+		(*ptr)->renderer, ((*ptr)->back).surface);
 	SDL_QueryTexture(((*ptr)->front).texture, NULL, NULL,
-		     &(((*ptr)->front).rect).w, &(((*ptr)->front).rect).h);
+			&(((*ptr)->front).rect).w, &(((*ptr)->front).rect).h);
 	SDL_QueryTexture(((*ptr)->left).texture, NULL, NULL,
-		     &(((*ptr)->left).rect).w, &(((*ptr)->left).rect).h);
+			&(((*ptr)->left).rect).w, &(((*ptr)->left).rect).h);
 	SDL_QueryTexture(((*ptr)->right).texture, NULL, NULL,
-		     &(((*ptr)->right).rect).w, &(((*ptr)->right).rect).h);
+			&(((*ptr)->right).rect).w, &(((*ptr)->right).rect).h);
 	SDL_QueryTexture(((*ptr)->back).texture, NULL, NULL,
-		     &(((*ptr)->back).rect).w, &(((*ptr)->back).rect).h);
+			&(((*ptr)->back).rect).w, &(((*ptr)->back).rect).h);
 	return (1);
 }
 
@@ -146,38 +177,38 @@ int	entity_textures(t_graphics **ptr)
 
 
 	((*ptr)->linemate).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->linemate).surface);
+		(*ptr)->renderer, ((*ptr)->linemate).surface);
 	((*ptr)->deraumere).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->deraumere).surface);
+		(*ptr)->renderer, ((*ptr)->deraumere).surface);
 	((*ptr)->sibur).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->sibur).surface);
+		(*ptr)->renderer, ((*ptr)->sibur).surface);
 	((*ptr)->mendiane).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->mendiane).surface);
+		(*ptr)->renderer, ((*ptr)->mendiane).surface);
 	((*ptr)->phiras).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->phiras).surface);
+		(*ptr)->renderer, ((*ptr)->phiras).surface);
 	((*ptr)->thystame).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->thystame).surface);
+		(*ptr)->renderer, ((*ptr)->thystame).surface);
 	((*ptr)->food).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->food).surface);
+		(*ptr)->renderer, ((*ptr)->food).surface);
 	((*ptr)->egg).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->egg).surface);
+		(*ptr)->renderer, ((*ptr)->egg).surface);
 
 	SDL_QueryTexture(((*ptr)->linemate).texture, NULL, NULL,
-		     &(((*ptr)->linemate).rect).w, &(((*ptr)->linemate).rect).h);
+			&(((*ptr)->linemate).rect).w, &(((*ptr)->linemate).rect).h);
 	SDL_QueryTexture(((*ptr)->deraumere).texture, NULL, NULL,
-		     &(((*ptr)->deraumere).rect).w, &(((*ptr)->deraumere).rect).h);
+			&(((*ptr)->deraumere).rect).w, &(((*ptr)->deraumere).rect).h);
 	SDL_QueryTexture(((*ptr)->sibur).texture, NULL, NULL,
-		     &(((*ptr)->sibur).rect).w, &(((*ptr)->sibur).rect).h);
+			&(((*ptr)->sibur).rect).w, &(((*ptr)->sibur).rect).h);
 	SDL_QueryTexture(((*ptr)->mendiane).texture, NULL, NULL,
-		     &(((*ptr)->mendiane).rect).w, &(((*ptr)->mendiane).rect).h);
+			&(((*ptr)->mendiane).rect).w, &(((*ptr)->mendiane).rect).h);
 	SDL_QueryTexture(((*ptr)->phiras).texture, NULL, NULL,
-		     &(((*ptr)->phiras).rect).w, &(((*ptr)->phiras).rect).h);
+			&(((*ptr)->phiras).rect).w, &(((*ptr)->phiras).rect).h);
 	SDL_QueryTexture(((*ptr)->thystame).texture, NULL, NULL,
-		     &(((*ptr)->thystame).rect).w, &(((*ptr)->thystame).rect).h);
+			&(((*ptr)->thystame).rect).w, &(((*ptr)->thystame).rect).h);
 	SDL_QueryTexture(((*ptr)->food).texture, NULL, NULL,
-		     &(((*ptr)->food).rect).w, &(((*ptr)->food).rect).h);
+			&(((*ptr)->food).rect).w, &(((*ptr)->food).rect).h);
 	SDL_QueryTexture(((*ptr)->egg).texture, NULL, NULL,
-		     &(((*ptr)->egg).rect).w, &(((*ptr)->egg).rect).h);
+			&(((*ptr)->egg).rect).w, &(((*ptr)->egg).rect).h);
 	return (1);
 }
 
@@ -190,14 +221,14 @@ int	create_textures(t_graphics **ptr)
 	((*ptr)->wall).surface = IMG_Load("media/cartoonWall.png");
 	((*ptr)->water).surface = IMG_Load("media/ground.jpg");
 	if (!((*ptr)->grass).surface || !((*ptr)->wall).surface ||
-	    !((*ptr)->water).surface)
+			!((*ptr)->water).surface)
 		error = 1;
 	((*ptr)->grass).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->grass).surface);
+		(*ptr)->renderer, ((*ptr)->grass).surface);
 	((*ptr)->wall).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->wall).surface);
+		(*ptr)->renderer, ((*ptr)->wall).surface);
 	((*ptr)->water).texture = SDL_CreateTextureFromSurface(
-			(*ptr)->renderer, ((*ptr)->water).surface);
+		(*ptr)->renderer, ((*ptr)->water).surface);
 	SDL_FreeSurface(((*ptr)->grass).surface);
 	SDL_FreeSurface(((*ptr)->wall).surface);
 	SDL_FreeSurface(((*ptr)->water).surface);
@@ -205,7 +236,7 @@ int	create_textures(t_graphics **ptr)
 	entity_textures(ptr);
 	monkey(ptr);
 	if (!((*ptr)->wall).texture  || !((*ptr)->grass).texture ||
-	    !((*ptr)->grass).texture || error)
+			!((*ptr)->grass).texture || error)
 	{
 		printf("Error: %s\n", SDL_GetError());
 		SDL_DestroyRenderer((*ptr)->renderer);
@@ -231,9 +262,9 @@ int	init_graphics(t_graphics **ptr)
 		error = 1;
 	(*ptr)->mfont = TTF_OpenFont("media/font.ttf", 80);
 	(*ptr)->window = SDL_CreateWindow("WTC - Zappy",
-                                       SDL_WINDOWPOS_CENTERED,
-                                       SDL_WINDOWPOS_CENTERED,
-                                       WINDOW_REAL_WIDTH, WINDOW_HEIGHT,0);
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			WINDOW_REAL_WIDTH, WINDOW_HEIGHT,0);
 	render_flags = SDL_RENDERER_ACCELERATED;
 	(*ptr)->renderer = SDL_CreateRenderer((*ptr)->window, -1, render_flags);
 	if (!(*ptr)->renderer || !(*ptr)->window || error)
@@ -277,12 +308,33 @@ void	*render(void *ptr)
 			(mn->gui).y--;
 			(mn->gui).x--;
 		}
-		draw_boaders(&(mn->gui));
+		draw_boaders(&(mn->gui), mn);
 		draw_menu(&(mn->gui));
 		SDL_RenderPresent((mn->gui).renderer);
 		SDL_Delay(1000/100);
 	}
 	return ptr;
+}
+
+void	get_structs(t_main *mn)
+{
+	char	buff[4096];
+	char	*tmp;
+	char	**s;
+
+	bzero(buff, sizeof(buff));
+	read(mn->fd, buff, sizeof(buff));
+	tmp = ft_strchr(buff, ' ') + 1;
+	s = ft_strsplit(tmp, ':');
+	/*if (!strncmp(buff, "user", 4))
+	  strcpy(mn->clients, buff);*/
+	if (!strncmp(buff, "exit", 4))
+		SDL_Quit();
+	if (!strncmp(buff, "ent", 3))
+		add_items(&(mn->ent), s);
+	/*if (!strncmp(buff, "broad", 4))
+	  strcpy(mn->broadcast, buff);*/
+	printf("command: %s\n", buff);
 }
 
 void	communication(void *ptr)
@@ -297,6 +349,7 @@ void	communication(void *ptr)
 	if (first < 2)
 	{
 		read(mn->fd, buff, sizeof(buff));
+		printf("buff: %s\n", buff);
 		if (first)
 		{
 			tmp = strchr(buff, ' ') + 1;
@@ -304,9 +357,11 @@ void	communication(void *ptr)
 			(mn->gui).y = atoi(tmp);
 		}
 		else
-			send(mn->fd, "GRAPHIC\n", 8, 0);
+			send(mn->fd, "GFX\n", 4, 0);
 		first++;
 	}
+	else
+		get_structs(mn);
 }
 
 void	*select_loop(void *ptr)
@@ -322,26 +377,7 @@ void	*select_loop(void *ptr)
 		{
 			if (FD_ISSET(i, &copy))
 			{
-				char buff[4096];
-				if (!read(mn->fd, buff, sizeof(buff)))
-				{
-					SDL_Quit();
-					exit(0);
-				}
-				if (strchr(buff, '*'))
-				{
-					SDL_Quit();
-					exit(0);
-				}
-				if (strchr(buff, '+')){
-				(mn->gui).y++;
-				(mn->gui).x++;
-				}
-				else
-				{
-				(mn->gui).y--;
-				(mn->gui).x--;
-				}
+				communication(mn);
 			}
 			i++;
 		}
@@ -355,10 +391,11 @@ void	threads(int fd, t_graphics **graphics)
 	t_main				mn;
 	fd_set				master;
 	pthread_t			thread;
-	
+
 	set_fds_conn(&master, fd);
 	mn.gui = *(*graphics);
 	mn.fd = fd;
+	mn.ent = NULL;
 	mn.master = master;
 	if(pthread_create(&thread, NULL, select_loop, (void *)&mn))
 		printf("unable to create thread\n");
@@ -386,7 +423,7 @@ int	main(int c, char **v)
 	if (connect(fd, (void*)&(addr), sizeof(addr)) < 0)
 	{
 		printf("failed to connect\n");
-			exit(1);
+		exit(1);
 	}
 	if (!init_graphics(&gui))
 		exit(1);
