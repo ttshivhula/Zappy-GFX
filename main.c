@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:50:59 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/05 12:47:22 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/05 13:00:24 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ int	init_graphics(t_graphics **ptr)
 	*ptr = (t_graphics *)malloc(sizeof(t_graphics));
 	(*ptr)->x = 0;
 	(*ptr)->y = 0;
-	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		error = 1;
 	if(TTF_Init())
 		error = 1;
