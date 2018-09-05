@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:50:59 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/04 11:32:52 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/04 19:27:42 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,7 +288,7 @@ void	*render(void *ptr)
 void	communication(void *ptr)
 {
 	t_main	*mn;
-	static	first  = 0;
+	static	int first  = 0;
 	char	buff[BUFF_SIZE];
 	char	*tmp;
 
@@ -297,7 +297,7 @@ void	communication(void *ptr)
 	if (first < 2)
 	{
 		read(mn->fd, buff, sizeof(buff));
-		if (fisrt)
+		if (first)
 		{
 			tmp = strchr(buff, ' ') + 1;
 			(mn->gui).x = atoi(buff);
