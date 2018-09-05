@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:49:17 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/05 11:02:19 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/05 12:20:05 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,25 @@ typedef	struct		s_ent
 	struct s_ent	*next;
 }					t_ent;
 
+typedef	struct		s_client
+{
+	char			name[4096];
+	int				x;
+	int				y;
+	int				level;
+	int				orientation;
+	int				action;
+	char			**inventory;
+	struct s_client	*next;
+}					t_client;
+
 typedef	struct		s_main
 {
 	t_graphics		gui;
 	fd_set			master;
 	int				fd;
 	t_ent			*ent;
+	t_client		*client;
 }					t_main;
 
 void	draw_food(t_graphics *gui, int x, int y);
@@ -119,5 +132,6 @@ void	draw_linemate(t_graphics *gui, int x, int y);
 int		ft_map(int val);
 void	draw_player(t_graphics *gui, int x, int y, int orient);
 void	add_items(t_ent **ent, char **ptr);
+void	add_client(t_client **ent, char **ptr);
 
 #endif

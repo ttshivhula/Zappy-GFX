@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/03 15:50:59 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/09/05 12:03:22 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/09/05 12:47:22 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,22 @@ void	display(t_main *mn, t_graphics *gui, int x, int y)
 	}
 }
 
+void	display_p(t_main *mn, t_graphics *gui, int x, int y)
+{
+	t_client *tmp;
+
+	tmp = mn->client;
+	while (tmp)
+	{
+		if ((tmp->x == x && tmp->y == y))
+		{
+			draw_player(gui, ((gui->wall).rect).x,
+					((gui->wall).rect).y, tmp->orientation);
+		}
+		tmp = tmp->next;
+	}
+}
+
 void	draw_boaders(t_graphics *gui, t_main *mn)
 {
 	int x;
@@ -71,17 +87,8 @@ void	draw_boaders(t_graphics *gui, t_main *mn)
 					SDL_RenderCopy(gui->renderer,
 							(gui->grass).texture,
 							NULL, &((gui->wall).rect));
-					/*draw_food(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_thystame(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_phiras(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_mendiane(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_sibur(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_deraumere(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_linemate(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);
-					  draw_egg(gui, ((gui->wall).rect).x, ((gui->wall).rect).y);*/
 					display(mn, gui, x, y);
-					if (x == 3 && y == 3)
-						draw_player(gui, ((gui->wall).rect).x, ((gui->wall).rect).y, 270);
+					display_p(mn, gui, x, y);
 				}
 				else
 				{
@@ -294,20 +301,17 @@ void	*render(void *ptr)
 	{
 		SDL_PumpEvents();
 		bottons = SDL_GetMouseState(&x, &y);
+		x = ft_map(x);
+		y = ft_map(y);
 		SDL_RenderClear((mn->gui).renderer);
-		if (bottons & SDL_BUTTON(SDL_BUTTON_LEFT))
+		/*if (bottons & SDL_BUTTON(SDL_BUTTON_LEFT))
 		{
-			(mn->gui).y++;
-			(mn->gui).x++;
 			x = ft_map(x);
 			y = ft_map(y);
-			printf("mouse x: %d y: %d\n", x, y);
-		}
-		if (bottons & SDL_BUTTON(SDL_BUTTON_RIGHT))
+		}*/
+		/*if (bottons & SDL_BUTTON(SDL_BUTTON_RIGHT))
 		{
-			(mn->gui).y--;
-			(mn->gui).x--;
-		}
+		}*/
 		draw_boaders(&(mn->gui), mn);
 		draw_menu(&(mn->gui));
 		SDL_RenderPresent((mn->gui).renderer);
@@ -326,10 +330,13 @@ void	get_structs(t_main *mn)
 	read(mn->fd, buff, sizeof(buff));
 	tmp = ft_strchr(buff, ' ') + 1;
 	s = ft_strsplit(tmp, ':');
-	/*if (!strncmp(buff, "user", 4))
-	  strcpy(mn->clients, buff);*/
+	if (!strncmp(buff, "user", 4))
+		add_client(&(mn->client), s);
 	if (!strncmp(buff, "exit", 4))
+	{
 		SDL_Quit();
+		exit(1);
+	}
 	if (!strncmp(buff, "ent", 3))
 		add_items(&(mn->ent), s);
 	/*if (!strncmp(buff, "broad", 4))
@@ -396,6 +403,7 @@ void	threads(int fd, t_graphics **graphics)
 	mn.gui = *(*graphics);
 	mn.fd = fd;
 	mn.ent = NULL;
+	mn.client = NULL;
 	mn.master = master;
 	if(pthread_create(&thread, NULL, select_loop, (void *)&mn))
 		printf("unable to create thread\n");
